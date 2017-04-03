@@ -101,7 +101,7 @@ void setup() {
   gatewayName += String(ESP.getChipId(), HEX);
   loadConfig();
   printConfig();
-  
+  delay(1000);
   initWifiManager();
   initOTA();
   configTime(1 * 3600, 0, "pool.ntp.org", "time.nist.gov"); 
@@ -564,16 +564,17 @@ void initWifiManager() {
   
   WiFiManager wifiManager;
   wifiManager.setTimeout(180);
+
+  display.clear();
+  display.display();
+  display.setFont(Open_Sans_Hebrew_Condensed_Light_24);
+  display.drawString(0, 0,"AP: " + gatewayName);
+  display.setFont(Open_Sans_Hebrew_Condensed_Light_22);
+  display.drawString(0, 28,"192.168.4.1");
+  display.display();
  
   if ( digitalRead(AP_RST_PIN) == LOW ) {
     Serial.println("Forced configuration..");
-    display.clear();
-    display.display();
-    display.setFont(Open_Sans_Hebrew_Condensed_Light_24);
-    display.drawString(0, 0,"AP: " + gatewayName);
-    display.setFont(Open_Sans_Hebrew_Condensed_Light_22);
-    display.drawString(0, 28,"192.168.4.1");
-    display.display();
     wifiManager.resetSettings();
     if (!wifiManager.startConfigPortal(gatewayName.c_str())) {
       Serial.println("Timeout connecting. Restarting...");
